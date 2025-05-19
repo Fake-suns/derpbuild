@@ -13,30 +13,9 @@ jobs:
 
       - name: Initialize Repo
         run: |
-          mkdir rom && cd rom
-          repo init -u https://github.com/LineageOS/android.git -b lineage-21.0 --depth=1
-          repo sync -c -j$(nproc) --force-sync
-
-      - name: Clone Device Trees
-        run: |
-          cd rom
-          git clone https://github.com/Your/device.git -b branch device/your/device
-          git clone https://github.com/Your/vendor.git -b branch vendor/your/device
-          git clone https://github.com/Your/kernel.git -b branch kernel/your/device
-
-      - name: Set up environment
-        run: |
-          cd rom
-          source build/envsetup.sh
-          lunch lineage_yourdevice-userdebug
-
-      - name: Build ROM
-        run: |
-          cd rom
-          make bacon -j$(nproc)
-
-      - name: Upload output
-        uses: actions/upload-artifact@v3
-        with:
-          name: rom-build
-          path: rom/out/target/product/yourdevice/*.zip
+          wget https://raw.githubusercontent.com/akhilnarang/scripts/refs/heads/master/setup/android_build_env.sh
+          chmod u+x android_build_env.sh
+          ./android_build_env.sh
+          mkdir derp && cd derp
+          repo init -u https://github.com/DerpFest-LOS/android_manifest.git -b 15.2 --git-lfs
+          repo sync -j20
