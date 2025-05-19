@@ -1,0 +1,42 @@
+name: Build Android ROM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ROM on Self-hosted
+    runs-on: self-hosted
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Initialize Repo
+        run: |
+          mkdir rom && cd rom
+          repo init -u https://github.com/LineageOS/android.git -b lineage-21.0 --depth=1
+          repo sync -c -j$(nproc) --force-sync
+
+      - name: Clone Device Trees
+        run: |
+          cd rom
+          git clone https://github.com/Your/device.git -b branch device/your/device
+          git clone https://github.com/Your/vendor.git -b branch vendor/your/device
+          git clone https://github.com/Your/kernel.git -b branch kernel/your/device
+
+      - name: Set up environment
+        run: |
+          cd rom
+          source build/envsetup.sh
+          lunch lineage_yourdevice-userdebug
+
+      - name: Build ROM
+        run: |
+          cd rom
+          make bacon -j$(nproc)
+
+      - name: Upload output
+        uses: actions/upload-artifact@v3
+        with:
+          name: rom-build
+          path: rom/out/target/product/yourdevice/*.zip
