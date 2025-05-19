@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Build ROM on Self-hosted
-    runs-on: self-hosted
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
