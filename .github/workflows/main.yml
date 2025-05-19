@@ -1,4 +1,4 @@
-name: Build Android ROM
+name: derp code sync 
 
 on:
   workflow_dispatch:
